@@ -43,82 +43,82 @@ class Window(object):
 class Random_window(Window):
 
   	def __init__(self, size, color, rows, columns):
-       	self.size = size
+		self.size = size
 		self.color = color
 		self.rows = rows
 		self.columns = columns
 		self.array = array
 		self.neighbour_array = neighbour_array
-       	self.s = super(Random_window, self).initial_pattern()
+       		self.s = super(Random_window, self).initial_pattern()
 	
  	def get_rect(self, wr, hr):
 		self.s.unlock()
 		for i in range(self.rows):
-        	for j in range(self.columns):
+			for j in range(self.columns):
 				if self.s.get_at((j*wr, i*hr)) == (255, 0, 0, 255):
 					self.array[i][j] = 1
 		return self.array
 	
 	def try_it(self, r, c, k, l, num):
 		try:
-        	if self.array[r+k][c+l] == 1:
-            	num += 1
-     	   	if self.array[r-k][l-c]:
-           		num +=1
-     	except IndexError:
-      		pass
+			if self.array[r+k][c+l] == 1:
+			    	num += 1
+     	   		if self.array[r-k][l-c] == 1:
+           			num +=1
+     		except IndexError:
+      			pass
 		return num
 
 
   	def num_neighbours(self, r, c):
-    	num = 0
-     	for k in range(2):
-     		for l in range(2):
-      			if (r, c) != (k+r, l+c) or (r, c) != (r-k, l-c):	
+    		num = 0
+     		for k in range(2):
+     			for l in range(2):
+      				if (r, c) != (k+r, l+c) or (r, c) != (r-k, l-c):	
 					num = self.try_it(r, c, k, l, num)
 		return num
 
  	def neighbour_array_make(self):
-      	for i in range(self.rows):
-       		for j in range(self.columns):
-           		self.neighbour_array[i][j] = self.num_neighbours(i,j)
-    	return  self.neighbour_array
+      		for i in range(self.rows):
+       			for j in range(self.columns):
+           			self.neighbour_array[i][j] = self.num_neighbours(i,j)
+    		return  self.neighbour_array
 
 	def check_live_or_dead(self, i, j):
-     	if self.array[i][j] == 1:
-      		if self.neighbour_array[i][j] < 2 or self.neighbour_array[i][j] >3 :
-              	self.array[i][j]=0
-          	else:
-              	self.array[i][j]=1
+     		if self.array[i][j] == 1:
+      			if self.neighbour_array[i][j] < 2 or self.neighbour_array[i][j] >3 :
+              			self.array[i][j]=0
+          		else:
+              			self.array[i][j]=1
    		elif self.array[i][j] == 0 and self.neighbour_array[i][j]==3:
-           	self.array[i][j]=1
-       	else:
-        	pass
+           		self.array[i][j]=1
+       		else:
+        		pass
 		return 0
 
   	def compute_nextgen(self):
-     	for i in range(self.rows):
-        	for j in range(self.columns):
-            	self.check_live_or_dead(i, j)
-      	return self.array
+     		for i in range(self.rows):
+        		for j in range(self.columns):
+            			self.check_live_or_dead(i, j)
+      		return self.array
 
  	def changing_pattern_make(self):
 		self.s.fill(white)
 		pygame.display.update()
 		for i in range(self.rows):
-       		for j in range(self.columns):
-                	if self.array[i][j] == 1:
-             			w=pygame.draw.rect(self.s, red, (j*wr, i*hr, wr, hr))
-						pygame.display.flip()
+       			for j in range(self.columns):
+                		if self.array[i][j] == 1:
+             				w=pygame.draw.rect(self.s, red, (j*wr, i*hr, wr, hr))
+					pygame.display.flip()
 		pygame.display.flip()
 		pygame.time.delay(50)
-       	return 0
+       		return 0	
 	
 
 	def quit_or_not(self):
    		for event in pygame.event.get():
-        	if event.type == pygame.QUIT: sys.exit()
-      	return 0
+        		if event.type == pygame.QUIT: sys.exit()
+      		return 0
 
 
 
