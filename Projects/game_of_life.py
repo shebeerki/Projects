@@ -13,11 +13,13 @@ array = [[0 for i in range(columns)] for j in range(rows)]
 neighbour_array = [[0 for i in range(columns)] for j in range(rows)]
 
 class Initial_Window(object):
-       
+	'''This class creates a display surface with 
+	random rectangular boxes'''
+
 	def __init__(self, size, color ):
-		self.size = size  
-		self.color = color
-		self.s = 0
+		self.size = size  	#initialise size of display
+		self.color = color	#initialise color of rectangle
+		self.s = 0		
 		
 	def rand(self, i, j):
 		return j*random.choice(range(i))
@@ -34,7 +36,7 @@ class Initial_Window(object):
 		pygame.display.update()
 		for i in range(limit):
 			pygame.draw.rect(self.s, self.color,
- 							(self.rand(rows, wr), self.rand(columns, hr), wr, hr))
+ 			(self.rand(rows, wr), self.rand(columns, hr), wr, hr))
 			pygame.display.update()
 			pygame.time.delay(3)
 		return self.s	
