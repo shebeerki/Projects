@@ -12,7 +12,7 @@ white = 255, 255, 255
 array = [[0 for i in range(columns)] for j in range(rows)]
 neighbour_array = [[0 for i in range(columns)] for j in range(rows)]
 
-class Window(object):
+class Initial_Window(object):
        
 	def __init__(self, size, color ):
 		self.size = size  
@@ -40,7 +40,7 @@ class Window(object):
 		return self.s	
 	
 
-class Random_window(Window):
+class Changing_window(Initial_Window):
 
   	def __init__(self, size, color, rows, columns):
 		self.size = size
@@ -49,7 +49,7 @@ class Random_window(Window):
 		self.columns = columns
 		self.array = array
 		self.neighbour_array = neighbour_array
-       		self.s = super(Random_window, self).initial_pattern()
+       		self.s = super(Changing_window, self).initial_pattern()
 	
  	def get_rect(self, wr, hr):
 		self.s.unlock()
@@ -122,8 +122,8 @@ class Random_window(Window):
 
 
 
-w = Window(size, red)
-c = Random_window(size, red, rows, columns)
+w = Initial_Window(size, red)
+c = Changing_window(size, red, rows, columns)
 
 while 1:
 	c.quit_or_not()
