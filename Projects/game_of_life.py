@@ -40,7 +40,7 @@ class Initial_Window(object):
 		return self.s	
 	
 
-class Changing_window(Initial_Window):
+class Changing_Window(Initial_Window):
 
   	def __init__(self, size, color, rows, columns):
 		self.size = size
@@ -49,7 +49,7 @@ class Changing_window(Initial_Window):
 		self.columns = columns
 		self.array = array
 		self.neighbour_array = neighbour_array
-       		self.s = super(Changing_window, self).initial_pattern()
+       		self.s = super(Changing_Window, self).initial_pattern()
 	
  	def get_rect(self, wr, hr):
 		self.s.unlock()
@@ -123,7 +123,7 @@ class Changing_window(Initial_Window):
 
 
 w = Initial_Window(size, red)
-c = Changing_window(size, red, rows, columns)
+c = Changing_Window(size, red, rows, columns)
 
 while 1:
 	c.quit_or_not()
