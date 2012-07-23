@@ -1,5 +1,3 @@
-import sys
-
 class Logic:
 	
 	def __init__(self, name, a, b, change = 0):
