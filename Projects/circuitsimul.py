@@ -65,9 +65,6 @@ class Xor(Logic):
 		return 0
 
 	def working(self):
-		a = self.a
-		b = self.b
-		self.a, self.b = input("enter the inputs a and b\n")
 		if (self.a, self.b) != (a, b):
 			self.change = 1
 		else:
@@ -75,14 +72,8 @@ class Xor(Logic):
 			print "inputs are not changed, so output are the previous ones\n"
 		return self.change
 
-	def infinite(self):
-		self.oper()
-		while 1:
-			if self.working():
-				self.oper()
-		return 0
 
-class Wire(And, Not, Or):
+class Wire(Logic):
 	
 		def __init__(self, name, a_now, gate = None):
 			self.name = name
@@ -97,4 +88,11 @@ class Wire(And, Not, Or):
 (a, b) = input("enter the inputs a and b where\
 	a, b are either binary 1 or 0\n")
 c = Xor('xor1', a, b, 0)
-c.infinite()
+c.oper()
+while 1:
+	a = c.a
+	b = c.b
+	c.a, c.b = input("enter the inputs a and b\n")
+	if c.working(a, b):
+		c.oper()
+	pass
