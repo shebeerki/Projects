@@ -23,7 +23,8 @@ class Wire :
         	self.value = value          
        	 	if self.latch: 
 			self.gate.oper()
-        	print "Connector %s-%s set to %s" % (self.gate.name,self.name,self.value)
+		if self.printvalue:
+        		print "Connector %s-%s set to %s" % (self.gate.name,self.name,self.value)
         	for con in self.inputs : 
 			con.setvalue(value)
 		return 0		
@@ -96,6 +97,8 @@ class Xor (Gate2) :
 
 
 x1 = Xor("xor")
+x1.C.printvalue = 1
+x1.A.printvalue = 1
 x1.A.setvalue(1)
-x1.B.setvalue(0)
-
+x1.B.printvalue = 1
+x1.B.setvalue(1)
