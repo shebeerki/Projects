@@ -1,98 +1,101 @@
-class Logic:
-	
-	def __init__(self, name, a, b, change = 0):
-		self.name = name
-		self.a = a
-		self.b = b
-		self.change = change
+class Wire :
+    
+    	def __init__ (self, gate, name, printvalue = 0,  latch = 0) :
+        	self.value = None
+        	self.gate = gate
+		self.printvalue = printvalue
+        	self.name  = name
+        	self.latch = latch
+        	self.inputs = []
 
-class And(Logic):
+    	def arr_inputs(self, inputs):
+    		if type(inputs) != type([]):
+			inputs = [inputs]
+   		return inputs
 
-	def __init__(self, name, a, b):
-		Logic.__init__(self, name, a, b)
-		
-	def aoper(self):
-		return self.a and self.b
-
-	def aprints(self):
-		print "output of %s gate is %d\n"%(self.name, self.aoper())
-		return self.aoper()
-
-class Or(Logic):
-	
-	def __init__(self, name, a, b):
-		Logic.__init__(self, name, a, b)
-
-	def ooper(self):
-		return self.a or self.b
-
-	def oprints(self):
-		print "output of %s gate is %d\n"%(self.name, self.ooper())
-		return self.ooper()
-
-class Not(Logic):
-
-	def __init__(self, name, a):
-		Logic.__init__(self, name, a, 0)
-
-	def noper(self):
-		return not self.a
-
-	def nprints(self):
-		print "output of %s is %d\n"%(self.name, self.noper())
-		return self.noper()
-
-class Xor(Logic):
-	def __init__(self, name, a, b, change = 0):
-		Logic.__init__(self, name, a, b)
-		self.change = change
-	
-	def oper(self):
-		w1 = Wire('wire1', self.b, "not1")
-		w2 = Wire("wire2", self.a, "and1")
-		n1 = Not("not1", w1.woper())
-		w3 = Wire("wire3", n1.nprints(), "and1")
-		a1 = And("and1", w1.woper(), n1.noper())
-		w4 = Wire("wire4", self.b, "and2")
-		w5 = Wire('wire5', self.a, "not2")
-		n2 = Not("not2", self.a)
-		w6 = Wire("wire6", n2.nprints(), "and2")
-		a2 = And("and2", n2.noper(), w2.woper())
-		w7 = Wire("wire7", a1.aprints(), "or")
-		w8 = Wire("wire8", a2.aprints(), "or")
-		o  = Or("xor1", a1.aoper(), a2.aoper())
-		o.oprints()
+   	def connect (self, inputs) :
+        	for input in self.arr_inputs(inputs) : self.inputs.append(input)
 		return 0
 
-	def working(self):
-		if (self.a, self.b) != (a, b):
-			self.change = 1
-		else:
-			self.change = 0
-			print "inputs are not changed, so output are the previous ones\n"
-		return self.change
+   	def setvalue(self, value) :
+        	if self.value == value : 
+			return 
+        	self.value = value          
+       	 	if self.latch: 
+			self.gate.oper()
+        	print "Connector %s-%s set to %s" % (self.gate.name,self.name,self.value)
+        	for con in self.inputs : 
+			con.setvalue(value)
+		return 0		
 
+class Gate :
+    
+    def __init__ (self, name) :
+        self.name = name
+         
+class Gate1(Gate):
 
-class Wire(Logic):
+	def __init__(self,name):
+		Gate.__init__(self, name)
+		self.A = Wire(self, 'A', latch = 1)
+		self.B = Wire(self, 'B')
+
+class Not (Gate1) :        
+    
+	def __init__ (self, name) :
+        	Gate1.__init__ (self, name)
 	
-		def __init__(self, name, a_now, gate = None):
-			self.name = name
-			self.a_now = a_now
-			self.gate = gate
-			print "%s passes    %d ==>   %s\n"%(self.name, self.a_now, self.gate)
+	def oper (self) : 
+    		self.B.setvalue(not self.A.value)
 
-		def woper(self):
-			return self.a_now
+class Gate2 (Gate) :  
+    	
+	def __init__ (self, name) :
+        	Gate.__init__ (self, name)
+        	self.A = Wire(self,'A', latch = 1)
+        	self.B = Wire(self,'B', latch = 1)
+  		self.C = Wire(self,'C')
+
+	def oper(self):
+		return 0
+
+class And (Gate2) :     
+    
+    	def __init__ (self, name) :
+        	Gate2.__init__ (self, name)
+    
+    	def oper (self) : 
+    		self.C.setvalue(self.A.value and self.B.value)
+		return 0
+
+class Or (Gate2) :        
+    
+    	def __init__ (self, name) :
+        	Gate2.__init__ (self, name)
+    
+    	def oper (self) : 
+    		self.C.setvalue(self.A.value or self.B.value)
+		return 0
+
+class Xor (Gate2) :
+    	
+	def __init__ (self, name) :
+        	Gate2.__init__ (self, name)
+        	self.A1 = And("A1")
+        	self.A2 = And("A2")
+        	self.N1 = Not("N1")
+        	self.N2 = Not("N2")
+        	self.O1 = Or ("O1")
+        	self.A.connect    ([ self.A1.A, self.N2.A])
+        	self.B.connect    ([ self.N1.A, self.A2.A])
+        	self.N1.B.connect ([ self.A1.B ])
+        	self.N2.B.connect ([ self.A2.B ])
+        	self.A1.C.connect ([ self.O1.A ])
+        	self.A2.C.connect ([ self.O1.B ])
+        	self.O1.C.connect ([ self.C ])
 
 
-(a, b) = input("enter the inputs a and b where\
-	a, b are either binary 1 or 0\n")
-c = Xor('xor1', a, b, 0)
-c.oper()
-while 1:
-	a = c.a
-	b = c.b
-	c.a, c.b = input("enter the inputs a and b\n")
-	if c.working(a, b):
-		c.oper()
-	pass
+x1 = Xor("xor")
+x1.A.setvalue(1)
+x1.B.setvalue(0)
+
