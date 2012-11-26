@@ -1,76 +1,73 @@
 <!DOCTYPE html>
 <html>
 <body>
-<canvas id="myCanvas" width="500" height="500" style="border:1px solid #000000;">
+<canvas id="myCanvas" width="500" height="500" style="border:1px solid #000000;" onclick = "start()" >
 </canvas>
 <script type="text/javascript">
 
+var c, ctx, vert, hight, prop, width, w, state;
+
+function start(){
+	c = document.getElementById("myCanvas"); 
+	width = c.width, hight = c.height; 
+	ctx = c.getContext("2d");
+	prop = [];
+	vert = {"a" : {"x" :0, "y" : hight}, "b": {"x" : width,
+	"y" : hight}, "c": {"x" : width / 2, "y" : hight - width * Math.sqrt(3)/2}};
+	prop.push(vert);
+	w = 0;
+	setInterval(vertex,1000);	
+}
+	
 function clear_canvas(){
-	var c = document.getElementById("myCanvas"); 
-	var ctx = c.getContext("2d");
 	ctx.clearRect(0, 0,  500, 500);
 }
 
-function start(){
-	var state = document.getElementById("state").value;
-	var c = document.getElementById("myCanvas"); 
-	var width = c.width, hight = c.height; 
-	var ctx = c.getContext("2d");
-	var prop = [];
-	var vert = {"a" : {"x" :0, "y" : hight}, "b": {"x" : width,
-	"y" : hight}, "c": {"x" : width / 2, "y" : hight - width * Math.sqrt(3)/2}};
-	prop.push(vert);
-	
-	
-	var w = 0;
-	function vertex(){
-		clear_canvas();
-		for(var i in prop){
-			if (prop.length >= Math.pow(3,state)){
-				draw(prop,ctx,i);
-				return 0;
-			}
-			draw(prop,ctx,i);
-			var f = {"a": prop[i].a};
-			var s = {"b": prop[i].b};
-			var t = {"c": prop[i].c};
-			var m1 = (f.a.x + s.b.x)/2;
-			var n1 = (f.a.y + s.b.y)/2;
-			f.b={}
-			s.a={};
-			f.b.x = m1;
-			f.b.y = n1;
-			s.a.x = m1;
-			s.a.y = n1;
-			var m2 = (s.b.x + t.c.x)/2;
-			var n2 = (s.b.y + t.c.y)/2;
-			t.b={};
-			s.c={};
-			t.b.x = m2;
-			t.b.y = n2;
-			s.c.x = m2;
-			s.c.y = n2;
-			var m3 = (f.a.x + t.c.x)/2;
-			var n3 = (f.a.y + t.c.y)/2;
-			f.c={};
-			t.a={};
-			f.c.x = m3;
-			f.c.y = n3;
-			t.a.x = m3;
-			t.a.y = n3;
-                        if(i == 0){ 
-				rop=[];
-			}
-                        rop.push(f);
-                        rop.push(s);
-                        rop.push(t);
+
+function vertex(){
+	clear_canvas();
+	if (prop.length > Math.pow(3,9)){
+		return 0;
+	}	
+	for(var i in prop){
+		draw(prop,ctx,i);
+		var f = {"a": prop[i].a};
+		var s = {"b": prop[i].b};
+		var t = {"c": prop[i].c};
+		var m1 = (f.a.x + s.b.x)/2;
+		var n1 = (f.a.y + s.b.y)/2;
+		f.b={}
+		s.a={};
+		f.b.x = m1;
+		f.b.y = n1;
+		s.a.x = m1;
+		s.a.y = n1;
+		var m2 = (s.b.x + t.c.x)/2;
+		var n2 = (s.b.y + t.c.y)/2;
+		t.b={};
+		s.c={};
+		t.b.x = m2;
+		t.b.y = n2;
+		s.c.x = m2;
+		s.c.y = n2;
+		var m3 = (f.a.x + t.c.x)/2;
+		var n3 = (f.a.y + t.c.y)/2;
+		f.c={};
+		t.a={};
+		f.c.x = m3;
+		f.c.y = n3;
+		t.a.x = m3;
+		t.a.y = n3;
+                if(i == 0){ 
+			rop=[];
 		}
-		prop = rop ;
-		document.getElementById("num").innerHTML="state no: "+w;
-		alert(w);
-		w=w+1;
-		vertex();
-	
+                rop.push(f);
+     	        rop.push(s);
+              	rop.push(t);
+	}
+	prop = rop;
+	document.getElementById("num").innerHTML="state no: "+w;		
+	w += 1;
 
 	function draw(prop,ctx,i){
 		ctx.beginPath();
@@ -79,19 +76,15 @@ function start(){
 		ctx.lineTo(prop[i].c.x,prop[i].c.y);
 		ctx.lineTo(prop[i].a.x,prop[i].a.y);
 		ctx.fill();
+
 	}
-	}	
-	vertex();
-}
+}	
+
 
 </script>
 <p>sierpinski triangle</p>
 <p id="num"></p>
-<form name = "form" action="" >
-<input type="text" id="state" name="state">
-<input type="submit" value="submit" name="state" onClick="start()" >
-<input type="button" value="clear" onClick="clear_canvas()">
-</form>
+<p>click on the canvas to see the sierpinski triangle patterns</p>
 </body>
 </html>
 
