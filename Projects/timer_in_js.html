@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+<head>
+<style>
+
+</style>
+</head>
+<body>
+<canvas id="myCanvas" width="500" height="500" style="border:1px solid #000000;" >
+<p>my first canvas</p>
+</canvas>
+<script type = "text/javascript">
+	var canvas = document.getElementById('myCanvas');
+	var context = canvas.getContext('2d');
+	context.fillStyle = 'red';
+
+	context.font = 'italic bold 40px sans-serif';
+	context.textBaseline = "middle";
+	var time = {};
+	var clr;
+
+function timer(){
+	time.min = Number(document.getElementById('fillm').value) || 0;
+	time.sec = Number(document.getElementById('fills').value) || 0;
+		
+	clr = setInterval(countdown,1000);
+
+	function countdown(){
+		if(time.sec >= 0){
+			fill(time.min+' : '+ time.sec);
+			time.sec--;
+		}
+		if(time.sec < 0 && time.min > 0){
+			time.sec = 59;
+			time.min--;
+		}
+		if(time.min == 0 && time.sec < 0){
+			context.clearRect(0,0,500,500);
+			context.fillText("Time Out",230,230);
+			clearInterval(clr);
+		}	
+	
+	}
+
+	function fill(tex){
+		context.clearRect(0,0,500,500);
+		context.fillText(tex,230,230);
+	}
+}
+
+function stop(){
+	clearInterval(clr);
+	document.getElementById("fillm").value = time.min;
+	document.getElementById("fills").value = time.sec;
+}
+
+</script>
+<form>
+<input type="text" name ="minutes" id = "fillm"/>
+<input type="text" name ="seconds" id = "fills"/>
+</form>
+<button onclick="timer()">start</button>
+<button onclick="stop()" >stop</button>
+</body>
+</html>
